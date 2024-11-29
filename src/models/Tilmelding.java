@@ -16,7 +16,6 @@ public class Tilmelding {
     private ArrayList<Udflugt> valgteUdflugter = new ArrayList<>();
     int antaldage;
 
-
     Tilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager) {
         this.foredragsHolder = foredragsHolder;
         this.ankomstDato = ankomstDato;
@@ -65,12 +64,12 @@ public class Tilmelding {
 
     public int beregnKonferencePris() {
         if (!foredragsHolder) {
-            int konferencePis = 0;
+            int konferencePris = 0;
 
 
-            konferencePis = konference.getPris() * antaldage;
+            konferencePris = konference.getPris() * antaldage;
 
-            return konferencePis;
+            return konferencePris;
         } else return 0;
     }
 

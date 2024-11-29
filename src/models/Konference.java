@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Konference {
     private String navn;
-    private int deltagere;
+    private int antalDeltagere;
     private String adresse;
     private LocalDate startDato;
     private LocalDate slutDato;
@@ -14,48 +14,73 @@ public class Konference {
     private ArrayList<Hotel> hoteler = new ArrayList<>();
     private ArrayList<Udflugt> udflugter = new ArrayList<>();
 
-    public Konference(String navn, int deltagere, String adresse, LocalDate startDato, LocalDate slutDato, int pris) {
+    public Konference(String navn, int antalDeltagere, String adresse, LocalDate startDato, LocalDate slutDato, int pris) {
         this.navn = navn;
-        this.deltagere = deltagere;
+        this.antalDeltagere = antalDeltagere;
         this.adresse = adresse;
         this.startDato = startDato;
         this.slutDato = slutDato;
         this.pris = pris;
     }
 
+    @Override
+    public String toString() {
+        return navn;
+    }
+
     public int getPris() {
         return pris;
     }
+
+
+    public ArrayList<Deltager> getAntalDeltagere() {
+        ArrayList<Deltager> deltagere = new ArrayList<>();
+        for (Tilmelding tilmelding : tilmeldinger) {
+            deltagere.add(tilmelding.getDeltager());
+        }
+        return deltagere;
+    }
+
     public void addUdflugt(Udflugt udflugt) {
         if (!udflugter.contains(udflugt)) {
             udflugter.add(udflugt);
         }
     }
+
     public void removeUdflugt(Udflugt udflugt) {
         if (udflugter.contains(udflugt)) {
             udflugter.remove(udflugt);
         }
     }
-    public void addHotel(Hotel hotel){
-        if (!hoteler.contains(hotel)){
+
+    public void addHotel(Hotel hotel) {
+        if (!hoteler.contains(hotel)) {
             hoteler.add(hotel);
         }
     }
-    public void removeHotel(Hotel hotel){
-        if (hoteler.contains(hotel)){
+
+    public void removeHotel(Hotel hotel) {
+        if (hoteler.contains(hotel)) {
             hoteler.remove(hotel);
         }
     }
-    public Tilmelding createTilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager){
-        Tilmelding tilmelding = new Tilmelding(valgtHotel, foredragsHolder, ankomstDato, afrejseDato, deltager,this,ledsager);
+
+    public Tilmelding createTilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager) {
+        Tilmelding tilmelding = new Tilmelding(valgtHotel, foredragsHolder, ankomstDato, afrejseDato, deltager, this, ledsager);
         tilmeldinger.add(tilmelding);
         return tilmelding;
 
     }
-    public void removeTilmelding(Tilmelding tilmelding){
-        if (tilmeldinger.contains(tilmelding)){
+
+    public void removeTilmelding(Tilmelding tilmelding) {
+        if (tilmeldinger.contains(tilmelding)) {
             tilmeldinger.remove(tilmelding);
         }
     }
 
+    public void addTilmelding(Tilmelding nyTilmelding) {
+        if (!tilmeldinger.contains(nyTilmelding)){
+            tilmeldinger.add(nyTilmelding);
+        }
+    }
 }
