@@ -9,11 +9,21 @@ import java.time.LocalDate;
 
 public class Controller {
 
-    public static  Konference opretKonference(String navn, int deltagere, String adresse, LocalDate startDato, LocalDate slutDato, int pris){
-        Konference konference = new Konference(navn, deltagere, adresse, startDato, slutDato, pris);
-        Storage.storeKonference(konference);
-        return konference;
+
+
+    public static Konference opretKonference(String navn, int antalDeltagere, String adresse, LocalDate ankomstDate, LocalDate afrejseDate, int pris) {
+        try {
+            // Opret en konference
+            Konference konference = new Konference(navn, antalDeltagere, adresse, ankomstDate, afrejseDate, pris);
+            // Gem konferencen
+            Storage.storeKonference(konference);
+            return konference;
+        } catch (Exception e) {
+            System.out.println("Fejl ved oprettelse af konference: " + e.getMessage());
+            return null;
+        }
     }
+
 
     public static Tilmelding opretTilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager) {
         Tilmelding tilmelding = konference.createTilmelding(valgtHotel, foredragsHolder, ankomstDato, afrejseDato, deltager, konference, ledsager);

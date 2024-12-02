@@ -41,6 +41,9 @@ public class Tilmelding {
         }
     }
 
+    public Hotel getValgtHotel() {
+        return valgtHotel;
+    }
 
     public void setLedsager(Ledsager ledsager) {
         if (this.ledsager != ledsager) {

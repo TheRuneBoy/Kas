@@ -9,6 +9,7 @@ public class Storage {
 
     //Deltager
     private static ArrayList<Deltager> deltagerer = new ArrayList<>();
+    private static Konference selectedKonference;
 
     public static ArrayList<Deltager> getDeltagerer() {
         return new  ArrayList<>(deltagerer);
@@ -92,5 +93,15 @@ public class Storage {
     }
     public static void storeFirma(Firma firma){
         firmaer.add(firma);
+    }
+
+    // Metode til at få den valgte konference
+    public static Konference getSelectedKonference() {
+        return selectedKonference;
+    }
+
+    // Metode til at sætte den valgte konference
+    public static void setSelectedKonference(Konference konference) {
+        selectedKonference = konference;
     }
 }

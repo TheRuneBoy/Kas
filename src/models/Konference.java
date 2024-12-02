@@ -2,6 +2,7 @@ package models;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Konference {
     private String navn;
@@ -13,6 +14,35 @@ public class Konference {
     private ArrayList<Tilmelding> tilmeldinger = new ArrayList<>();
     private ArrayList<Hotel> hoteler = new ArrayList<>();
     private ArrayList<Udflugt> udflugter = new ArrayList<>();
+    private List<Deltager> deltagere;
+
+    public String getNavn() {
+        return navn;
+    }
+
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public LocalDate getStartDato() {
+        return startDato;
+    }
+
+    public LocalDate getSlutDato() {
+        return slutDato;
+    }
+
+    public ArrayList<Tilmelding> getTilmeldinger() {
+        return tilmeldinger;
+    }
+
+    public ArrayList<Hotel> getHoteler() {
+        return hoteler;
+    }
+
+    public ArrayList<Udflugt> getUdflugter() {
+        return udflugter;
+    }
 
     public Konference(String navn, int antalDeltagere, String adresse, LocalDate startDato, LocalDate slutDato, int pris) {
         this.navn = navn;
@@ -21,6 +51,7 @@ public class Konference {
         this.startDato = startDato;
         this.slutDato = slutDato;
         this.pris = pris;
+        this.deltagere = new ArrayList<>();
     }
 
     @Override
@@ -82,5 +113,13 @@ public class Konference {
         if (!tilmeldinger.contains(nyTilmelding)){
             tilmeldinger.add(nyTilmelding);
         }
+    }
+
+    public void addDeltager(Deltager deltager) {
+        this.deltagere.add(deltager);
+    }
+
+    public List<Deltager> getDeltagere() {
+        return this.deltagere;
     }
 }

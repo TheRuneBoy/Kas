@@ -1,9 +1,12 @@
 package gui;
 
-import controller.Controller;
-import models.*;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
+import models.Deltager;
+import models.Konference;
+import models.Ledsager;
+import models.Tilmelding;
+
 import java.time.LocalDate;
 
 public class TilmeldingOgDeltagerOpret {
@@ -18,8 +21,8 @@ public class TilmeldingOgDeltagerOpret {
             String navn = deltagerNavn;  // Brug direkte den String, der er sendt som argument
 
             if (!navn.isEmpty()) {
-                // Opret deltager via Controller
-                Deltager newDeltager = Controller.opretDeltager(navn, "", null, null);  // Tomme felter til at starte med
+                // Opret deltager
+                Deltager newDeltager = new Deltager(navn, "", "", null);  // Tomme felter til at starte med
 
                 // Get the other details from the form
                 boolean isForedragsholder = foredragsholderCheckBox.isSelected();
@@ -27,15 +30,21 @@ public class TilmeldingOgDeltagerOpret {
                 LocalDate ankomstDato = ankomstDatePicker.getValue();
                 LocalDate afrejseDato = afrejseDatePicker.getValue();
 
-                // Create Tilmelding for the participant via Controller
-                Controller.opretTilmelding(null, isForedragsholder, ankomstDato, afrejseDato,
-                        newDeltager, selectedKonference, hasLedsager ? Controller.opretLedsager("Ledsager") : null);
+                // Opret ledsager, hvis nødvendigt
+                Ledsager ledsager = hasLedsager ? new Ledsager("Ledsager Navn") : null;
 
-                // Opdater deltager listen i GUI'en
-                deltagerListview.updateDeltagerList();
+                // Create Tilmelding for the participant
+                Tilmelding tilmelding = selectedKonference.createTilmelding(
+                        null, isForedragsholder, ankomstDato, afrejseDato, newDeltager, selectedKonference, ledsager);
 
-                // Clear text fields and selections
-                // Vi har allerede deltagerNavn som en String, så vi behøver ikke .clear() her
+                // **Opdater deltager listen**: Tilføj deltageren til konference
+                selectedKonference.addDeltager(newDeltager);  // Tilføj deltager til den valgte konference
+
+                // Opdater deltagerlisten i ListView
+                deltagerListview.updateDeltagerList();  // Opdater ListView med den nyeste deltager
+
+                // Clear input fields efter oprettelse
+                deltagerNavn = "";  // Clear the name input field
                 foredragsholderCheckBox.setSelected(false);
                 ledsagerCheckBox.setSelected(false);
                 ankomstDatePicker.setValue(null);
