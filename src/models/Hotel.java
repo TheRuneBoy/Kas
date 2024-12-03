@@ -35,4 +35,8 @@ public class Hotel {
             hotelTilægs.remove(hotelTilæg);
         }
     }
+
+    public String getNavn() {
+    return null;
+    }
 }

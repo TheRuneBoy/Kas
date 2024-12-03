@@ -67,7 +67,7 @@ public class Konference {
     public ArrayList<Deltager> getAntalDeltagere() {
         ArrayList<Deltager> deltagere = new ArrayList<>();
         for (Tilmelding tilmelding : tilmeldinger) {
-            deltagere.add(tilmelding.getDeltager());
+            deltagere.add(tilmelding.getDeltager()); // Henter deltageren fra tilmeldingen
         }
         return deltagere;
     }
@@ -96,8 +96,8 @@ public class Konference {
         }
     }
 
-    public Tilmelding createTilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager) {
-        Tilmelding tilmelding = new Tilmelding(valgtHotel, foredragsHolder, ankomstDato, afrejseDato, deltager, this, ledsager);
+    public Tilmelding createTilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
+        Tilmelding tilmelding = new Tilmelding(foredragsHolder, ankomstDato, afrejseDato, deltager, this, ledsager, firma);
         tilmeldinger.add(tilmelding);
         return tilmelding;
 
@@ -119,7 +119,7 @@ public class Konference {
         this.deltagere.add(deltager);
     }
 
-    public List<Deltager> getDeltagere() {
-        return this.deltagere;
+    public int getMaxAntalDeltagere() {
+        return this.antalDeltagere;
     }
 }

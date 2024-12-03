@@ -8,4 +8,12 @@ public class Firma {
         this.firmaNavn = firmaNavnnavn;
         this.firmaMobil = firmaMobil;
     }
+
+    public String getFirmaNavn() {
+        return firmaNavn;
+    }
+
+    public String getFirmaMobil() {
+        return firmaMobil;
+    }
 }

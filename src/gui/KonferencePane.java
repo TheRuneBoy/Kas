@@ -10,6 +10,9 @@ import models.Udflugt;
 import storage.Storage;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class KonferencePane extends GridPane {
 
@@ -22,6 +25,7 @@ public class KonferencePane extends GridPane {
     private TextField udflugtTextField;
     private ListView<Udflugt> udflugtListView;
     private ListView<Konference> konferenceListView;
+    private ListView<String> konferenceInfo;
     private Button addKonferenceButton;
 
     public KonferencePane() {
@@ -39,17 +43,27 @@ public class KonferencePane extends GridPane {
         this.udflugtTextField = new TextField();
 
         //Label for the title "Konference"
-        this.add(new Label("Konference"), 2, 0);
+        this.add(new Label("Konference"), 2, 0, 2, 1);
         this.konferenceListView = new ListView<>();
-        this.konferenceListView.setPrefWidth(100.0);
-        this.konferenceListView.setPrefHeight(100.0);
+        this.konferenceListView.setPrefWidth(200.0);
+        this.konferenceListView.setPrefHeight(200.0);
         konferenceListView.getItems().setAll(Storage.getKonferencer());
         System.out.println("Opdaterer konferenceListView med " + Storage.getKonferencer().size() + " konferencer.");
         ChangeListener<Konference> listener = (ov, oldKonference, newKonference) -> {
             this.selectedKonferenceChanged(newKonference);
         };
         this.konferenceListView.getSelectionModel().selectedItemProperty().addListener(listener);
-        this.add(konferenceListView, 2, 1, 5, 4);
+        this.add(konferenceListView, 2, 1, 4, 4);
+
+        //Label for the title "Konference"
+        this.add(new Label("Konference Info"), 7, 0, 2, 1);
+        this.konferenceInfo = new ListView<>();
+        this.konferenceInfo.setPrefWidth(200.0);
+        this.konferenceInfo.setPrefHeight(200.0);
+        konferenceListView.getItems().setAll(Storage.getKonferencer());
+
+        this.konferenceListView.getSelectionModel().selectedItemProperty().addListener(listener);
+        this.add(konferenceInfo, 7, 1, 4, 4);
 
         //Label and textField for "Navn"
         Label lblNavn = new Label("Navn");
@@ -93,9 +107,9 @@ public class KonferencePane extends GridPane {
         this.add(addKonferenceButton, 0, 7);
     }
 
-    private void selectedKonferenceChanged(Konference newKonference) {
-        this.updateController(newKonference);
-    }
+    // private void selectedKonferenceChanged(Konference newKonference) {
+    // this.updateController(newKonference);
+    // }
 
     public void updateController(Konference konference) {
     }
@@ -125,6 +139,7 @@ public class KonferencePane extends GridPane {
             // Opdater ListView for konferencer
             konferenceListView.getItems().setAll(Storage.getKonferencer());
 
+
             // Tøm tekstfelterne efter oprettelse
             navnTextField.clear();
             adresseTextField.clear();
@@ -136,6 +151,33 @@ public class KonferencePane extends GridPane {
             System.out.println("Fejl i input: Prisen eller antal deltagere er ikke et gyldigt tal.");
         } catch (Exception e) {
             System.out.println("Fejl i input: " + e.getMessage());
+        }
+    }
+
+    private void selectedKonferenceChanged(Konference newKonference) {
+        if (newKonference != null) {
+            // Opdater UI elementer med data fra den valgte konference
+            navnTextField.setText(newKonference.getNavn());
+            adresseTextField.setText(newKonference.getAdresse());
+            startDatePicker.setValue(newKonference.getStartDato());
+            slutDatePicker.setValue(newKonference.getSlutDato());
+            maxAntalDeltagereTextField.setText(String.valueOf(newKonference.getMaxAntalDeltagere()));
+            prisTextField.setText(String.valueOf(newKonference.getPris()));
+
+            // Opret en liste af strenge, der repræsenterer konferencens attributter
+            List<String> konferenceAttributter = new ArrayList<>();
+            konferenceAttributter.add("Navn: " + newKonference.getNavn());
+            konferenceAttributter.add("Adresse: " + newKonference.getAdresse());
+            konferenceAttributter.add("Startdato: " + newKonference.getStartDato().toString());
+            konferenceAttributter.add("Slutdato: " + newKonference.getSlutDato().toString());
+            konferenceAttributter.add("Max antal deltagere: " + newKonference.getMaxAntalDeltagere());
+            konferenceAttributter.add("Pris: " + newKonference.getPris());
+
+            // Hvis du vil vise udflugter også, kan du tilføje dem
+            udflugtTextField.setText(newKonference.getUdflugter().toString());  // Juster afhængigt af, hvordan du vil vise udflugter
+
+            // Opdater konferenceInfo ListView med de relevante attributter
+            konferenceInfo.getItems().setAll(konferenceAttributter);
         }
     }
 }

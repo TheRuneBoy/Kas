@@ -25,17 +25,19 @@ public class Controller {
     }
 
 
-    public static Tilmelding opretTilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager) {
-        Tilmelding tilmelding = konference.createTilmelding(valgtHotel, foredragsHolder, ankomstDato, afrejseDato, deltager, konference, ledsager);
+    public static Tilmelding opretTilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma
+    ) {
+        Tilmelding tilmelding = konference.createTilmelding(valgtHotel, foredragsHolder, ankomstDato, afrejseDato, deltager, konference, ledsager, firma);
         Storage.storeTilmelding(tilmelding);
         return tilmelding;
     }
 
     public static Deltager opretDeltager(String navn, String adresse, String mobil, Firma firma){
-        Deltager deltager = new Deltager(navn, adresse, mobil, firma);
+        Deltager deltager = new Deltager(navn, adresse, mobil);
         Storage.storeDeltager(deltager);
         return deltager;
     }
+
 
     public static Udflugt opretUdflugt (String navn, LocalDate dato, int pris){
         Udflugt udflugt = new Udflugt(navn, dato, pris);

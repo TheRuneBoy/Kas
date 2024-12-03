@@ -9,7 +9,7 @@ public class Deltager {
     private boolean hasLedsager;
     private Ledsager ledsager;
 
-    public Deltager(String navn, String adresse, String mobil, Firma firma) {
+    public Deltager(String navn, String adresse, String mobil) {
         this.navn = navn;
         this.adresse = adresse;
         this.mobil = mobil;

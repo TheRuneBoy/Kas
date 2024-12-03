@@ -16,21 +16,23 @@ public class Tilmelding {
     private ArrayList<Udflugt> valgteUdflugter = new ArrayList<>();
     int antaldage;
 
-    Tilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager) {
+    public Tilmelding(boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
         this.foredragsHolder = foredragsHolder;
         this.ankomstDato = ankomstDato;
         this.afrejseDato = afrejseDato;
-        this.deltager = deltager;
+        this.deltager = deltager;  // Deltageren gemmes i tilmeldingen
         this.konference = konference;
         this.ledsager = ledsager;
-        this.valgtHotel = valgtHotel;
         if (ankomstDato != null && afrejseDato != null) {
-            this.antaldage = (int) ChronoUnit.DAYS.between(ankomstDato, afrejseDato)+1;
+            this.antaldage = (int) ChronoUnit.DAYS.between(ankomstDato, afrejseDato) + 1;
         } else {
             this.antaldage = 0; // Default to 0 if dates are missing
         }
     }
 
+    public boolean isForedragsHolder() {
+        return foredragsHolder;
+    }
 
     public Ledsager getLedsager() {
         return ledsager;

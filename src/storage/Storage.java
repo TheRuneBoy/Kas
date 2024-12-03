@@ -1,20 +1,20 @@
 package storage;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Storage {
 
-    //Deltager
-    private static ArrayList<Deltager> deltagerer = new ArrayList<>();
-    private static Konference selectedKonference;
+    // Deltager
+    private static ObservableList<Deltager> deltagerer = FXCollections.observableArrayList();
 
-    public static ArrayList<Deltager> getDeltagerer() {
-        return new  ArrayList<>(deltagerer);
-    }//det metod return nye kope og beskytte originale
-
+    public static ObservableList<Deltager> getDeltagerer() {
+        return deltagerer;
+    }
 
     public static void storeDeltager(Deltager deltager) {
         deltagerer.add(deltager);
@@ -75,15 +75,23 @@ public class Storage {
         hotelTilægs.add(hotelTilæg);
     }
 
-    //Konference
-    private static ArrayList<Konference> konferencer = new ArrayList<>();
+    // Konference
+    private static ObservableList<Konference> konferencer = FXCollections.observableArrayList();
+    private static ObservableList<Runnable> konferenceChangeListeners = FXCollections.observableArrayList();
 
-    public static ArrayList<Konference> getKonferencer() {
-        return new ArrayList<>(konferencer);
+    static {
+        konferencer.add(new Konference("Hav og Himmel", 2000, "Odense Universitet", LocalDate.of(2024, 12, 16), LocalDate.of(2024, 12, 18), 1500));
+    }
+
+    public static ObservableList<Konference> getKonferencer() {
+        return konferencer;
     }
 
     public static void storeKonference(Konference konference) {
         konferencer.add(konference);
+        for (Runnable listener : konferenceChangeListeners) {
+            listener.run();
+        }
     }
 
     private static ArrayList<Firma> firmaer = new ArrayList<>();
@@ -95,13 +103,8 @@ public class Storage {
         firmaer.add(firma);
     }
 
-    // Metode til at få den valgte konference
-    public static Konference getSelectedKonference() {
-        return selectedKonference;
-    }
 
-    // Metode til at sætte den valgte konference
-    public static void setSelectedKonference(Konference konference) {
-        selectedKonference = konference;
+    public static void addKonferenceChangeListener(Runnable listener) {
+        konferenceChangeListeners.add(listener);
     }
 }
