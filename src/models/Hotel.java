@@ -17,6 +17,13 @@ public class Hotel {
         this.dobbelPris = dobbelPris;
     }
 
+    @Override
+    public String toString() {
+        return  navn + '\'' +
+                " Enkelt Pris = " + enkeltPris +
+                " Dobbel Pris = " + dobbelPris;
+    }
+
     public int getEnkeltPris() {
         return enkeltPris;
     }

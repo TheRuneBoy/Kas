@@ -49,11 +49,19 @@ public class Controller {
         Storage.storeHotel(hotel);
         return hotel;
     }
+
     public static HotelTilæg opretHotelTilæg(String navn, int pris){
         HotelTilæg hotelTilæg = new HotelTilæg(navn, pris);
-        Storage.storeHoteltilkøb(hotelTilæg);
+        Storage.storeHotelTilæg(hotelTilæg);
         return hotelTilæg;
     }
+
+    public static void tilføjHotelTilægTilHotel(Hotel hotel, HotelTilæg hotelTilæg) {
+        hotel.addHotelTilæg(hotelTilæg);  // Tilføjer tilægget til hotellet
+        Storage.storeHotel(hotel);  // Gem hotellet med de opdaterede tilæg
+    }
+
+
     public static Ledsager opretLedsager(String navn){
         Ledsager ledsager = new Ledsager(navn);
         Storage.storeLedsager(ledsager);

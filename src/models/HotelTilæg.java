@@ -9,6 +9,12 @@ public class HotelTilæg {
         this.pris = pris;
     }
 
+    @Override
+    public String toString() {
+        return navn + '\'' +
+                " pris = " + pris;
+    }
+
     public int getPris() {
         return pris;
     }

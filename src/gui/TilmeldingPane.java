@@ -11,18 +11,22 @@ import storage.Storage;
 
 import java.time.LocalDate;
 
+
 public class TilmeldingPane extends GridPane {
 
     private final TextField adresseTextField;
     private final TextField mobilTextField;
     private final TextField firmaNavnTextField;
     private final TextField firmaMobilTextField;
+    private final ListView<HotelTilæg> hotelTilægListView;
     private ListView<Konference> konferenceListView;
     private ListView<Deltager> deltagerListView;
     private TextField deltagerTextField;
     private TextField konferenceTextField;
     private TextField ledsagerTextField;
     private ListView<String> detailsListView;
+    private ListView<Hotel> hotelListView;
+    private ListView<Udflugt> udflugtListView;
 
     public TilmeldingPane() {
         this.setPadding(new Insets(20));
@@ -100,7 +104,7 @@ public class TilmeldingPane extends GridPane {
         this.deltagerListView = new ListView<>();
         this.add(this.deltagerListView, 3, 1, 1, 5);
         this.deltagerListView.setPrefWidth(250.0);
-        this.deltagerListView.setPrefHeight(200.0);
+        this.deltagerListView.setPrefHeight(100.0);
 
         // Deltager Info ListView
         Label lblDetailListView = new Label("Deltager Info");
@@ -108,12 +112,39 @@ public class TilmeldingPane extends GridPane {
         this.detailsListView = new ListView<>();
         this.add(this.detailsListView, 4, 1, 1, 5);
         this.detailsListView.setPrefWidth(250.0);
-        this.detailsListView.setPrefHeight(200.0);
+        this.detailsListView.setPrefHeight(100.0);
 
         // Opret Tilmelding Button
         Button opretTilmeldingButton = new Button("Opret Tilmelding");
         this.add(opretTilmeldingButton, 1, 10);
         opretTilmeldingButton.setOnAction(e -> createTilmelding(erForedragsholder.isSelected(), harLedsager.isSelected(), erFirma.isSelected()));
+
+        //Hotel Listview
+        Label lblHotelListView = new Label("Hoteller");
+        this.add(lblHotelListView, 3, 6);
+        this.hotelListView = new ListView<>();
+        this.add(this.hotelListView, 3, 7);
+        this.hotelListView.setPrefWidth(100);
+        this.hotelListView.setPrefHeight(100);
+        this.hotelListView.getItems().setAll(Storage.getHoteller());
+
+        //HotelTilæg Listview
+        Label lblHotelTilægListView = new Label("Hotel Tillæg");
+        this.add(lblHotelTilægListView, 3, 8);
+        this.hotelTilægListView = new ListView<>();
+        this.add(this.hotelTilægListView, 3, 9);
+        this.hotelTilægListView.setPrefWidth(100);
+        this.hotelTilægListView.setPrefHeight(100);
+        this.hotelTilægListView.getItems().setAll(Storage.getHotelTilægs());
+
+        //Udlfugt Listview
+        Label lblUdflugtListView = new Label("Udflugter");
+        this.add(lblUdflugtListView, 4, 6);
+        this.udflugtListView = new ListView<>();
+        this.add(this.udflugtListView, 4, 7);
+        this.udflugtListView.setPrefWidth(100);
+        this.udflugtListView.setPrefHeight(100);
+
 
         // Aktiver/deaktiver Firma felter baseret på checkboks
         erFirma.selectedProperty().addListener((obs, oldValue, newValue) -> {
@@ -139,6 +170,9 @@ public class TilmeldingPane extends GridPane {
                 updateDeltagerInfo(newDeltager);
             }
         });
+
+        //Vis Hoteller når en konference vælges
+       // hotelListView.getSelectionModel().selectedItemProperty().addListener(obs, oldHotel, newHotel) -<;
     }
 
     private void createTilmelding(boolean erForedragsholder, boolean harLedsager, boolean erFirma) {
@@ -225,8 +259,8 @@ public class TilmeldingPane extends GridPane {
         }
 
         // Hvis deltageren har en ledsager, vis ledsagerens navn
-        if (deltager.getLedsager() != null) {
-            detailsListView.getItems().add("Ledsager Navn: " + deltager.getLedsager().getNavn());
+        if (tilmelding.getLedsager() != null) {
+            detailsListView.getItems().add("Ledsager Navn: " + tilmelding.getLedsager().getNavn());
         }
     }
 
