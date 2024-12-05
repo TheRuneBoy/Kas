@@ -12,7 +12,7 @@ public class Konference {
     private LocalDate slutDato;
     private int pris;
     private ArrayList<Tilmelding> tilmeldinger = new ArrayList<>();
-    private ArrayList<Hotel> hoteler = new ArrayList<>();
+    private ArrayList<Hotel> hoteller = new ArrayList<>();
     private ArrayList<Udflugt> udflugter = new ArrayList<>();
     private List<Deltager> deltagere;
 
@@ -36,8 +36,8 @@ public class Konference {
         return tilmeldinger;
     }
 
-    public ArrayList<Hotel> getHoteler() {
-        return hoteler;
+    public ArrayList<Hotel> getHoteller() {
+        return hoteller;
     }
 
     public ArrayList<Udflugt> getUdflugter() {
@@ -58,6 +58,8 @@ public class Konference {
     public String toString() {
         return navn;
     }
+
+
 
     public int getPris() {
         return pris;
@@ -85,19 +87,19 @@ public class Konference {
     }
 
     public void addHotel(Hotel hotel) {
-        if (!hoteler.contains(hotel)) {
-            hoteler.add(hotel);
+        if (!hoteller.contains(hotel)) {
+            hoteller.add(hotel);
         }
     }
 
     public void removeHotel(Hotel hotel) {
-        if (hoteler.contains(hotel)) {
-            hoteler.remove(hotel);
+        if (hoteller.contains(hotel)) {
+            hoteller.remove(hotel);
         }
     }
 
-    public Tilmelding createTilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
-        Tilmelding tilmelding = new Tilmelding(foredragsHolder, ankomstDato, afrejseDato, deltager, this, ledsager, firma);
+    public Tilmelding createTilmelding(Hotel valgtHotel, ArrayList<Udflugt> valgteUdflugter, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
+        Tilmelding tilmelding = new Tilmelding(valgtHotel, valgteUdflugter, foredragsHolder, ankomstDato, afrejseDato, deltager, this, ledsager, firma);
         tilmeldinger.add(tilmelding);
         return tilmelding;
 

@@ -8,6 +8,7 @@ public class Deltager {
     private boolean isForedragsholder;
     private boolean hasLedsager;
     private Ledsager ledsager;
+    private Tilmelding tilmelding;
 
     public Deltager(String navn, String adresse, String mobil) {
         this.navn = navn;
@@ -18,9 +19,8 @@ public class Deltager {
 
     @Override
     public String toString() {
-        String ledsagerStr = (ledsager != null) ? ", Ledsager: " + ledsager.getNavn() : "";
-        return "Navn: " + navn +
-        " Foredragsholder: " + (isForedragsholder ? "Ja" : "Nej") + ledsagerStr;
+
+        return "Navn: " + navn;
     }
 
     public Firma getFirma() {

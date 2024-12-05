@@ -15,6 +15,13 @@ public class Udflugt {
         this.pris = pris;
     }
 
+    @Override
+    public String toString() {
+        return  navn + '\'' +
+                ", dato : " + dato +
+                ", pris = " + pris;
+    }
+
     public int getPris() {
         return pris;
     }

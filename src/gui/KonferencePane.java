@@ -5,17 +5,18 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import models.Deltager;
 import models.Konference;
-import models.Udflugt;
+import models.Tilmelding;
 import storage.Storage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class KonferencePane extends GridPane {
 
+    private final ListView<String> deltagerListView;
     private TextField navnTextField;
     private TextField adresseTextField;
     private DatePicker startDatePicker;
@@ -23,7 +24,6 @@ public class KonferencePane extends GridPane {
     private TextField maxAntalDeltagereTextField;
     private TextField prisTextField;
     private TextField udflugtTextField;
-    private ListView<Udflugt> udflugtListView;
     private ListView<Konference> konferenceListView;
     private ListView<String> konferenceInfo;
     private Button addKonferenceButton;
@@ -53,17 +53,24 @@ public class KonferencePane extends GridPane {
             this.selectedKonferenceChanged(newKonference);
         };
         this.konferenceListView.getSelectionModel().selectedItemProperty().addListener(listener);
-        this.add(konferenceListView, 2, 1, 4, 4);
+        this.add(konferenceListView, 2, 1, 2, 4);
 
         //Label for the title "Konference"
-        this.add(new Label("Konference Info"), 7, 0, 2, 1);
+        this.add(new Label("Konference Info"), 5, 0);
         this.konferenceInfo = new ListView<>();
         this.konferenceInfo.setPrefWidth(200.0);
         this.konferenceInfo.setPrefHeight(200.0);
         konferenceListView.getItems().setAll(Storage.getKonferencer());
-
         this.konferenceListView.getSelectionModel().selectedItemProperty().addListener(listener);
-        this.add(konferenceInfo, 7, 1, 4, 4);
+        this.add(konferenceInfo, 5, 1, 2, 4);
+
+        // Deltager ListView
+        Label lblDeltagerListView = new Label("Tilmeldte Deltagere");
+        this.add(lblDeltagerListView, 8, 0);
+        this.deltagerListView = new ListView<>();
+        this.add(this.deltagerListView, 8, 1, 2, 4);
+        this.deltagerListView.setPrefWidth(250.0);
+        this.deltagerListView.setPrefHeight(100.0);
 
         //Label and textField for "Navn"
         Label lblNavn = new Label("Navn");
@@ -105,13 +112,6 @@ public class KonferencePane extends GridPane {
         addKonferenceButton = new Button("Create Konference");
         addKonferenceButton.setOnAction(event -> this.createKonferenceAction());
         this.add(addKonferenceButton, 0, 7);
-    }
-
-    // private void selectedKonferenceChanged(Konference newKonference) {
-    // this.updateController(newKonference);
-    // }
-
-    public void updateController(Konference konference) {
     }
 
     private void createKonferenceAction() {
@@ -173,11 +173,36 @@ public class KonferencePane extends GridPane {
             konferenceAttributter.add("Max antal deltagere: " + newKonference.getMaxAntalDeltagere());
             konferenceAttributter.add("Pris: " + newKonference.getPris());
 
-            // Hvis du vil vise udflugter også, kan du tilføje dem
-            udflugtTextField.setText(newKonference.getUdflugter().toString());  // Juster afhængigt af, hvordan du vil vise udflugter
-
             // Opdater konferenceInfo ListView med de relevante attributter
             konferenceInfo.getItems().setAll(konferenceAttributter);
+
+            // Hent tilmeldinger for den valgte konference
+            List<Tilmelding> tilmeldingerForKonference = new ArrayList<>();
+            for (Tilmelding tilmelding : Storage.getTilmeldinger()) {
+                if (tilmelding.getKonference().equals(newKonference)) {
+                    tilmeldingerForKonference.add(tilmelding);
+                }
+            }
+
+            // Opret en liste til at vise deltagere og ledsagere
+            List<String> deltagereOgLedsagere = new ArrayList<>();
+            for (Tilmelding tilmelding : tilmeldingerForKonference) {
+                Deltager deltager = tilmelding.getDeltager();
+                // Add the participant's name
+                String deltagerInfo = deltager.getNavn();
+
+                // If there is a companion, add the companion's name
+                if (tilmelding.getLedsager() != null) {
+                    deltagerInfo += " (Ledsager: " + tilmelding.getLedsager().getNavn() + ")";
+                }
+
+                // Add the participant and companion info to the list
+                deltagereOgLedsagere.add(deltagerInfo);
+            }
+
+            // Update the ListView with participants and companions
+            deltagerListView.getItems().setAll(deltagereOgLedsagere);
         }
     }
 }
+

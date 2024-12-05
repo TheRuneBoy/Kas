@@ -1,15 +1,21 @@
 package gui;
 
 import controller.Controller;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import models.*;
 import storage.Storage;
+import models.Konference;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 
 public class TilmeldingPane extends GridPane {
 
@@ -17,12 +23,18 @@ public class TilmeldingPane extends GridPane {
     private final TextField mobilTextField;
     private final TextField firmaNavnTextField;
     private final TextField firmaMobilTextField;
+    private DatePicker ankomstDato;
+    private DatePicker afrejseDato;
+    private final ListView<HotelTilæg> hotelTilægListView;
     private ListView<Konference> konferenceListView;
     private ListView<Deltager> deltagerListView;
     private TextField deltagerTextField;
     private TextField konferenceTextField;
     private TextField ledsagerTextField;
     private ListView<String> detailsListView;
+    private ListView<Hotel> hotelListView;
+    private ListView<Udflugt> udflugtListView;
+    private TextField totalPris;
 
     public TilmeldingPane() {
         this.setPadding(new Insets(20));
@@ -30,10 +42,16 @@ public class TilmeldingPane extends GridPane {
         this.setVgap(10);
         this.setGridLinesVisible(false);
 
+        //Pris beregner
+        this.add(new Label("Total Pris"), 1, 12);
+        this.totalPris = new TextField();
+        this.add(totalPris, 2, 12);
+
+
         // Konference ListView
         this.add(new Label("Konference"), 0, 0);
         this.konferenceListView = new ListView<>();
-        this.add(this.konferenceListView, 0, 1, 1, 5);
+        this.add(this.konferenceListView, 0, 1, 1, 3);
         this.konferenceListView.setPrefWidth(200.0);
         this.konferenceListView.setPrefHeight(200.0);
         this.konferenceListView.getItems().setAll(Storage.getKonferencer());
@@ -57,41 +75,51 @@ public class TilmeldingPane extends GridPane {
         this.mobilTextField = new TextField();
         this.add(mobilTextField, 2, 3);
 
+        Label lblAnkomst = new Label("Ankomst Dato");
+        this.add(lblAnkomst, 1, 4);
+        this.ankomstDato = new DatePicker();
+        this.add(ankomstDato, 2, 4);
+
+        Label lblAfrejse = new Label("Afrejse Dato");
+        this.add(lblAfrejse, 1, 5);
+        this.afrejseDato = new DatePicker();
+        this.add(afrejseDato, 2, 5);
+
         // Foredragsholder checkboks
         Label lblForedragsholder = new Label("Foredragsholder");
-        this.add(lblForedragsholder, 1, 4);
+        this.add(lblForedragsholder, 1, 6);
         CheckBox erForedragsholder = new CheckBox();
-        this.add(erForedragsholder, 2, 4);
+        this.add(erForedragsholder, 2, 6);
 
         // Firma checkboks
         Label lblFirma = new Label("Er Deltager for et Firma?");
-        this.add(lblFirma, 1, 5);
+        this.add(lblFirma, 1, 7);
         CheckBox erFirma = new CheckBox();
-        this.add(erFirma, 2, 5);
+        this.add(erFirma, 2, 7);
 
         // Firma specifik tekstfelter (kun hvis Firma checkboks er valgt)
         Label lblFirmaNavn = new Label("Firma Navn");
-        this.add(lblFirmaNavn, 1, 6);
+        this.add(lblFirmaNavn, 1, 8);
         this.firmaNavnTextField = new TextField();
-        this.add(this.firmaNavnTextField, 2, 6);
+        this.add(this.firmaNavnTextField, 2, 8);
         firmaNavnTextField.setDisable(!erFirma.isSelected());
 
         Label lblFirmaMobil = new Label("Firma Mobil");
-        this.add(lblFirmaMobil, 1, 7);
+        this.add(lblFirmaMobil, 1, 9);
         this.firmaMobilTextField = new TextField();
-        this.add(this.firmaMobilTextField, 2, 7);
+        this.add(this.firmaMobilTextField, 2, 9);
         firmaMobilTextField.setDisable(!erFirma.isSelected());
 
         // Ledsager checkboks og tekstfelt
         Label lblHarLedsager = new Label("Har Ledsager");
-        this.add(lblHarLedsager, 1, 8);
+        this.add(lblHarLedsager, 1, 10);
         CheckBox harLedsager = new CheckBox();
-        this.add(harLedsager, 2, 8);
+        this.add(harLedsager, 2, 10);
 
         Label lblLedsagerNavn = new Label("Ledsager Navn");
-        this.add(lblLedsagerNavn, 1, 9);
+        this.add(lblLedsagerNavn, 1, 11);
         this.ledsagerTextField = new TextField();
-        this.add(ledsagerTextField, 2, 9);
+        this.add(ledsagerTextField, 2, 11);
         ledsagerTextField.setDisable(!harLedsager.isSelected());
 
         // Deltager ListView
@@ -100,7 +128,7 @@ public class TilmeldingPane extends GridPane {
         this.deltagerListView = new ListView<>();
         this.add(this.deltagerListView, 3, 1, 1, 5);
         this.deltagerListView.setPrefWidth(250.0);
-        this.deltagerListView.setPrefHeight(200.0);
+        this.deltagerListView.setPrefHeight(100.0);
 
         // Deltager Info ListView
         Label lblDetailListView = new Label("Deltager Info");
@@ -108,12 +136,40 @@ public class TilmeldingPane extends GridPane {
         this.detailsListView = new ListView<>();
         this.add(this.detailsListView, 4, 1, 1, 5);
         this.detailsListView.setPrefWidth(250.0);
-        this.detailsListView.setPrefHeight(200.0);
+        this.detailsListView.setPrefHeight(100.0);
 
         // Opret Tilmelding Button
         Button opretTilmeldingButton = new Button("Opret Tilmelding");
-        this.add(opretTilmeldingButton, 1, 10);
+        this.add(opretTilmeldingButton, 1, 13);
         opretTilmeldingButton.setOnAction(e -> createTilmelding(erForedragsholder.isSelected(), harLedsager.isSelected(), erFirma.isSelected()));
+
+        //Hotel Listview
+        Label lblHotelListView = new Label("Hoteller");
+        this.add(lblHotelListView, 3, 6);
+        this.hotelListView = new ListView<>();
+        this.add(this.hotelListView, 3, 7);
+        this.hotelListView.setPrefWidth(100);
+        this.hotelListView.setPrefHeight(100);
+        this.hotelListView.getItems().setAll(Storage.getHoteller());
+
+        //HotelTilæg Listview
+        Label lblHotelTilægListView = new Label("Hotel Tillæg");
+        this.add(lblHotelTilægListView, 3, 8);
+        this.hotelTilægListView = new ListView<>();
+        this.add(this.hotelTilægListView, 3, 9);
+        this.hotelTilægListView.setPrefWidth(100);
+        this.hotelTilægListView.setPrefHeight(100);
+        this.hotelTilægListView.getItems().setAll(Storage.getHotelTilægs());
+
+        //Udlfugt Listview
+        Label lblUdflugtListView = new Label("Udflugter");
+        this.add(lblUdflugtListView, 4, 6);
+        this.udflugtListView = new ListView<>();
+        this.add(this.udflugtListView, 4, 7);
+        this.udflugtListView.setPrefWidth(100);
+        this.udflugtListView.setPrefHeight(100);
+        this.udflugtListView.getItems().setAll(Storage.getUdflugter());
+
 
         // Aktiver/deaktiver Firma felter baseret på checkboks
         erFirma.selectedProperty().addListener((obs, oldValue, newValue) -> {
@@ -139,6 +195,9 @@ public class TilmeldingPane extends GridPane {
                 updateDeltagerInfo(newDeltager);
             }
         });
+
+        //Vis Hoteller når en konference vælges
+        // hotelListView.getSelectionModel().selectedItemProperty().addListener(obs, oldHotel, newHotel) -<;
     }
 
     private void createTilmelding(boolean erForedragsholder, boolean harLedsager, boolean erFirma) {
@@ -170,6 +229,7 @@ public class TilmeldingPane extends GridPane {
                 return;
             }
             firma = Controller.opretFirma(firmaNavn, firmaMobil);
+            deltager.setFirma(firma);
         }
 
         // Opret Ledsager, hvis valgt
@@ -177,31 +237,165 @@ public class TilmeldingPane extends GridPane {
         if (harLedsager) {
             String ledsagerNavn = this.ledsagerTextField.getText();
             ledsager = Controller.opretLedsager(ledsagerNavn);
+
+            // Vælg udflugter for ledsageren
+            ArrayList<Udflugt> valgteUdflugterForLedsager = new ArrayList<>(this.udflugtListView.getSelectionModel().getSelectedItems());
         }
 
+        // Hent de valgte ankomst og afrejse datoer
+        LocalDate ankomstDato = this.ankomstDato.getValue();
+        LocalDate afrejseDato = this.afrejseDato.getValue();
+
+        if (ankomstDato == null || afrejseDato == null) {
+            showAlert("Fejl", "Vælg venligst både ankomst- og afrejsedato.");
+            return;
+        }
+
+        // Hent de valgte udflugter for deltageren
+        ArrayList<Udflugt> valgteUdflugter = new ArrayList<>(this.udflugtListView.getSelectionModel().getSelectedItems());
+
+        // Hent det valgte hotel
+        Hotel valgtHotel = this.hotelListView.getSelectionModel().getSelectedItem();
+        if (valgtHotel == null) {
+            showAlert("Fejl", "Vælg venligst et hotel.");
+            return;
+        }
+
+        // Hent de valgte hoteltilæg
+        ObservableList<HotelTilæg> valgteHotelTilægs = this.hotelTilægListView.getSelectionModel().getSelectedItems();
+
         // Opret Tilmelding via Controller
-        Hotel valgtHotel = null;  // Erstat med det valgte hotel
-        LocalDate ankomstDato = LocalDate.now(); // Erstat med valgte ankomstdato
-        LocalDate afrejseDato = LocalDate.now().plusDays(1); // Erstat med valgte afrejse dato
-        Tilmelding tilmelding = Controller.opretTilmelding(valgtHotel, erForedragsholder, ankomstDato, afrejseDato, deltager, selectedKonference, ledsager, firma);
+        Tilmelding tilmelding = Controller.opretTilmelding(
+                valgtHotel,
+                (ArrayList<HotelTilæg>) valgteHotelTilægs,
+                valgteUdflugter,
+                erForedragsholder,
+                ankomstDato,
+                afrejseDato,
+                deltager,
+                selectedKonference,
+                ledsager,
+                firma
+        );
 
         // Opdater deltagerlisten
         updateDeltagereListView(selectedKonference);
+
+        // Beregn og opdater totalpris
+        updateTotalPris(valgtHotel, valgteHotelTilægs, valgteUdflugter);
 
         showAlert("Succes", "Tilmeldingen blev oprettet.");
     }
 
 
+    private void updateTotalPris(Hotel valgtHotel, ObservableList<HotelTilæg> valgteHotelTilægs, ArrayList<Udflugt> valgteUdflugter) {
+        double totalPrisValue = valgtHotel.getEnkeltPris(); // Grundpris for hotel
+
+        // Læg hoteltilæg til, hvis der er valgt nogen
+        for (HotelTilæg tilæg : valgteHotelTilægs) {
+            totalPrisValue += tilæg.getPris();
+        }
+
+        // Læg udflugtspriser til, hvis der er valgt udflugter
+        for (Udflugt udflugt : valgteUdflugter) {
+            totalPrisValue += udflugt.getPris();
+        }
+
+        // Opdater totalpris feltet
+        totalPris.setText(String.format("%.2f DKK", totalPrisValue));
+    }
+
+
     private void updateDeltagereListView(Konference konference) {
         if (konference != null) {
-            deltagerListView.getItems().clear();
+            // Directly assign a new ObservableList if necessary
+            ObservableList<Deltager> deltagereList = FXCollections.observableArrayList();
+
             // Hent deltagere via tilmeldinger, og tilføj deltagerne selv (ikke kun navnet)
             for (Tilmelding tilmelding : Storage.getTilmeldinger()) {
                 if (tilmelding.getKonference().equals(konference)) {
-                    deltagerListView.getItems().add(tilmelding.getDeltager()); // Add the Deltager object directly
+                    deltagereList.add(tilmelding.getDeltager()); // Add the Deltager object directly
                 }
             }
+
+            // Create a SortedList that sorts based on participant name (Navn)
+            SortedList<Deltager> sortedDeltagere = new SortedList<>(deltagereList, Comparator.comparing(Deltager::getNavn));
+
+            // Set the SortedList to the ListView
+            deltagerListView.setItems(sortedDeltagere);
+
+            // Opdater hotelListView med hotellerne for den valgte konference
+            ObservableList<Hotel> hotellerList = FXCollections.observableArrayList(konference.getHoteller());
+            hotelListView.setItems(hotellerList);
+
+            updateUdflugterListView(konference);
+
+            // Opdater visningen af hoteltilæg når et hotel vælges
+            hotelListView.getSelectionModel().selectedItemProperty().addListener((obs, oldHotel, newHotel) -> {
+                if (newHotel != null) {
+                    // Hent hoteltilæggene for det valgte hotel
+                    ObservableList<HotelTilæg> hotelTilægs = FXCollections.observableArrayList(newHotel.getHotelTilægs());
+
+                    // Opdater hoteltilæg ListView
+                    hotelTilægListView.setItems(hotelTilægs);
+
+
+                }
+            });
         }
+    }
+
+    private void chooseHotelAndExtras() {
+        // 1. Vælg et hotel
+        Hotel valgtHotel = showHotelSelectionDialog();
+        if (valgtHotel == null) {
+            showAlert("Fejl", "Vælg venligst et hotel.");
+            return;
+        }
+
+        // 2. Vælg hoteltilæg
+        ArrayList<HotelTilæg> valgteHotelTilægs = showHotelTilægSelectionDialog(valgtHotel);
+        if (valgteHotelTilægs == null || valgteHotelTilægs.isEmpty()) {
+            showAlert("Fejl", "Vælg venligst mindst et hoteltilæg.");
+            return;
+        }
+
+        // 3. Vælg udflugter
+        List<Udflugt> valgteUdflugter = showUdflugtSelectionDialog();
+        if (valgteUdflugter == null || valgteUdflugter.isEmpty()) {
+            showAlert("Fejl", "Vælg venligst mindst én udflugt.");
+            return;
+        }
+
+        // 4. Opdater Tilmeldingen
+        updateTilmelding(valgtHotel, valgteHotelTilægs, valgteUdflugter);
+    }
+
+
+    private Hotel showHotelSelectionDialog() {
+        // Åben dialog for at vælge hotel
+        // (Du kan bruge en ListView, eller en anden GUI-komponent til at vise hotellerne)
+        // Returner det valgte hotel
+        return hotelListView.getSelectionModel().getSelectedItem();  // Eksempel på valg fra en ListView
+    }
+
+    private ArrayList<HotelTilæg> showHotelTilægSelectionDialog(Hotel valgtHotel) {
+        // Åben dialog for at vælge hoteltilæg baseret på det valgte hotel
+        // Returner de valgte hoteltilæg
+        return new ArrayList<>(hotelTilægListView.getSelectionModel().getSelectedItems());  // Eksempel
+    }
+
+    private List<Udflugt> showUdflugtSelectionDialog() {
+        // Assuming udflugtListView contains the available excursions
+        // Return the selected items as a list
+        return new ArrayList<>(udflugtListView.getSelectionModel().getSelectedItems());
+    }
+
+
+    private void updateTilmelding(Hotel valgtHotel, ArrayList<HotelTilæg> valgteHotelTilægs, List<Udflugt> valgteUdflugter) {
+        // Opdater den aktuelle tilmelding med de valgte data
+        // Her kan du opdatere det relevante Tilmelding objekt og opdatere UI'en med den nye information
+        // Du kan bruge Controller til at opdatere eller oprette en ny Tilmelding
     }
 
 
@@ -211,35 +405,63 @@ public class TilmeldingPane extends GridPane {
         detailsListView.getItems().add("Adresse: " + deltager.getAdresse());
         detailsListView.getItems().add("Mobil: " + deltager.getMobil());
 
-        // Tjek om deltageren er foredragsholder og vis det
-        Tilmelding tilmelding = findTilmeldingForDeltager(deltager);
-        if (tilmelding != null && tilmelding.getDeltager().equals(deltager)) {
+        // Find tilmeldingen for deltageren
+        Tilmelding tilmelding = findTilmeldingForDeltager(deltager, konference);
+
+        if (tilmelding != null) {
+            // Tjek om deltageren er foredragsholder og vis det
             detailsListView.getItems().add("Foredragsholder: " + (tilmelding.isForedragsHolder() ? "Ja" : "Nej"));
-        }
 
-        // Hvis deltageren er tilknyttet et firma, vis firmaoplysninger
-        if (deltager.getFirma() != null) {
-            Firma firma = deltager.getFirma();
-            detailsListView.getItems().add("Firma Navn: " + firma.getFirmaNavn());
-            detailsListView.getItems().add("Firma Mobil: " + firma.getFirmaMobil());
-        }
+            // Tilføj ankomst og afrejse dato
+            detailsListView.getItems().add("Ankomst Dato: " + tilmelding.getAnkomstDato());
+            detailsListView.getItems().add("Afrejse Dato: " + tilmelding.getAfrejseDato());
 
-        // Hvis deltageren har en ledsager, vis ledsagerens navn
-        if (deltager.getLedsager() != null) {
-            detailsListView.getItems().add("Ledsager Navn: " + deltager.getLedsager().getNavn());
+            // Hvis deltageren er tilknyttet et firma, vis firmaoplysninger
+            if (tilmelding.getDeltager().getFirma() != null) {
+                detailsListView.getItems().add("Firma Navn: " + tilmelding.getDeltager().getFirma().getFirmaNavn());
+                detailsListView.getItems().add("Firma Mobil: " + tilmelding.getDeltager().getFirma().getFirmaMobil());
+            }
+
+            // Hvis deltageren har en ledsager, vis ledsagerens navn og udflugter
+            if (tilmelding.getLedsager() != null) {
+                detailsListView.getItems().add("Ledsager Navn: " + tilmelding.getLedsager().getNavn());
+
+                // Vis ledsagerens udflugter, hvis der er nogen
+                if (!tilmelding.getValgteUdflugter().isEmpty()) {
+                    detailsListView.getItems().add("Ledsagerens Udflugter: ");
+                    for (Udflugt udflugt : tilmelding.getValgteUdflugter()) {
+                        detailsListView.getItems().add(udflugt.toString()); // Udflugtens detaljer vises her
+                    }
+                } else {
+                    detailsListView.getItems().add("Ingen udflugter valgt for ledsageren.");
+                }
+            }
+
+            // Tilføj hotel til info
+            if (tilmelding.getValgtHotel() != null) {
+                detailsListView.getItems().add("Hotel: " + tilmelding.getValgtHotel().getNavn());
+            } else {
+                detailsListView.getItems().add("Hotel: Intet Hotel valgt");
+            }
         }
     }
 
-
-
-    // Hjælpe metode til at finde en tilmelding for en deltager
-    private Tilmelding findTilmeldingForDeltager(Deltager deltager) {
-        for (Tilmelding tilmelding : Storage.getTilmeldinger()) {
+    // Eksempel på hvordan findTilmeldingForDeltager kan implementeres
+    private Tilmelding findTilmeldingForDeltager(Deltager deltager, Konference konference) {
+        for (Tilmelding tilmelding : konference.getTilmeldinger()) {
             if (tilmelding.getDeltager().equals(deltager)) {
                 return tilmelding;
             }
         }
-        return null;
+        return null; // Hvis ingen tilmelding findes
+    }
+
+
+    private void updateUdflugterListView(Konference konference) {
+        if (konference != null) {
+            ObservableList<Udflugt> udflugterList = FXCollections.observableArrayList(konference.getUdflugter());
+            udflugtListView.setItems(udflugterList);
+        }
     }
 
 

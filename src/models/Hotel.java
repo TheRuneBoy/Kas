@@ -17,6 +17,13 @@ public class Hotel {
         this.dobbelPris = dobbelPris;
     }
 
+    @Override
+    public String toString() {
+        return  navn + '\'' +
+                " Enkelt Pris = " + enkeltPris +
+                " Dobbel Pris = " + dobbelPris;
+    }
+
     public int getEnkeltPris() {
         return enkeltPris;
     }
@@ -36,7 +43,11 @@ public class Hotel {
         }
     }
 
+    public ArrayList<HotelTilæg> getHotelTilægs() {
+        return hotelTilægs;
+    }
+
     public String getNavn() {
-    return null;
+        return null;
     }
 }

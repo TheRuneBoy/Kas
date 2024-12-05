@@ -16,11 +16,12 @@ public class Tilmelding {
     private ArrayList<Udflugt> valgteUdflugter = new ArrayList<>();
     int antaldage;
 
-    public Tilmelding(boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
+    public Tilmelding(Hotel valgtHotel, ArrayList<Udflugt> valgteUdflugter, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
+        this.valgtHotel = valgtHotel;
         this.foredragsHolder = foredragsHolder;
         this.ankomstDato = ankomstDato;
         this.afrejseDato = afrejseDato;
-        this.deltager = deltager;  // Deltageren gemmes i tilmeldingen
+        this.deltager = deltager;
         this.konference = konference;
         this.ledsager = ledsager;
         if (ankomstDato != null && afrejseDato != null) {
@@ -28,23 +29,38 @@ public class Tilmelding {
         } else {
             this.antaldage = 0; // Default to 0 if dates are missing
         }
+
+        // Initialisere valgte udflugter
+        if (valgteUdflugter != null) {
+            this.valgteUdflugter = new ArrayList<>(valgteUdflugter); // Sørg for at kopiere listen
+        }
     }
+
 
     public boolean isForedragsHolder() {
         return foredragsHolder;
     }
 
+    public LocalDate getAnkomstDato() {
+        return ankomstDato;
+    }
+
+    public LocalDate getAfrejseDato() {
+        return afrejseDato;
+    }
+
     public Ledsager getLedsager() {
         return ledsager;
     }
-    public void addhotelTilæg(HotelTilæg hotelTilæg){
+
+    public void addhotelTilæg(HotelTilæg hotelTilæg) {
         if (!hotelTilkøbs.contains(hotelTilæg)) {
             hotelTilkøbs.add(hotelTilæg);
         }
     }
 
     public Hotel getValgtHotel() {
-        return valgtHotel;
+        return this.valgtHotel;
     }
 
     public void setLedsager(Ledsager ledsager) {
@@ -60,12 +76,20 @@ public class Tilmelding {
     public Konference getKonference() {
         return konference;
     }
+
     public void addUdflugt(Udflugt udflugt) {
         if (udflugt != null && !valgteUdflugter.contains(udflugt)) {
             valgteUdflugter.add(udflugt);
         }
     }
 
+    public ArrayList<Udflugt> getValgteUdflugter() {
+        return valgteUdflugter;
+    }
+
+    public ArrayList<HotelTilæg> getHotelTilkøbs() {
+        return hotelTilkøbs;
+    }
 
     public int beregnKonferencePris() {
         if (!foredragsHolder) {
@@ -93,9 +117,9 @@ public class Tilmelding {
         }
         int hotelPris;
         if (ledsager != null) {
-            hotelPris = valgtHotel.getDobbelPris() * (antaldage-1);
+            hotelPris = valgtHotel.getDobbelPris() * (antaldage - 1);
         } else {
-            hotelPris = valgtHotel.getEnkeltPris() * (antaldage-1);
+            hotelPris = valgtHotel.getEnkeltPris() * (antaldage - 1);
         }
         return hotelPris;
     }
@@ -106,15 +130,15 @@ public class Tilmelding {
             hotelTilkøbsPris += hotelTilkøb.getPris();
         }
 
-        return hotelTilkøbsPris * (antaldage-1);
+        return hotelTilkøbsPris * (antaldage - 1);
     }
 
 
     public int BeregnTotalPris() {
 
-       if (valgtHotel==null) {
-           return beregnKonferencePris() + beregnUdflgtsPris();
-       }
+        if (valgtHotel == null) {
+            return beregnKonferencePris() + beregnUdflgtsPris();
+        }
         return beregnKonferencePris() + beregnHotelPris() + beregnHotelTilkøbPris() + beregnUdflgtsPris();
 
     }

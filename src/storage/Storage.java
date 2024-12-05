@@ -31,6 +31,7 @@ public class Storage {
         hoteller.add(hotel);
     }
 
+
     //Udflugt
     private static ArrayList<Udflugt> udflugter = new ArrayList<>();
 
@@ -71,7 +72,7 @@ public class Storage {
         return new ArrayList<>(hotelTilægs);
     }
 
-    public static void storeHoteltilkøb(HotelTilæg hotelTilæg) {
+    public static void storeHotelTilæg(HotelTilæg hotelTilæg) {
         hotelTilægs.add(hotelTilæg);
     }
 
@@ -107,4 +108,5 @@ public class Storage {
     public static void addKonferenceChangeListener(Runnable listener) {
         konferenceChangeListeners.add(listener);
     }
+
 }
