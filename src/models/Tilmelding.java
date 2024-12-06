@@ -16,7 +16,7 @@ public class Tilmelding {
     private ArrayList<Udflugt> valgteUdflugter = new ArrayList<>();
     int antaldage;
 
-    public Tilmelding(Hotel valgtHotel, ArrayList<Udflugt> valgteUdflugter, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
+    public Tilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
         this.valgtHotel = valgtHotel;
         this.foredragsHolder = foredragsHolder;
         this.ankomstDato = ankomstDato;

@@ -2,7 +2,6 @@ package gui;
 
 import controller.Controller;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import models.*;
 
 import java.time.LocalDate;
@@ -54,12 +53,12 @@ public class AppTabs {
         konference1.addUdflugt(udflugt2);
         konference1.addUdflugt(udflugt3);
 
-        Tilmelding tilmeldingAllan = Controller.opretTilmelding(hotelHvidSvane, null, null, false, LocalDate.of(2024, 12, 25), LocalDate.of(2024, 12, 26), deltager1, konference1, null, null);
-        Tilmelding tilmeldingArne = Controller.opretTilmelding(hotelHvidSvane,null, null, true, LocalDate.of(2024, 12, 25), LocalDate.of(2024, 12, 26), deltager2, konference1, null, null);
+        Tilmelding tilmeldingAllan = Controller.opretTilmelding(hotelHvidSvane, false, LocalDate.of(2024, 12, 25), LocalDate.of(2024, 12, 26), deltager1, konference1, null, null);
+        Tilmelding tilmeldingArne = Controller.opretTilmelding(hotelHvidSvane, true, LocalDate.of(2024, 12, 25), LocalDate.of(2024, 12, 26), deltager2, konference1, null, null);
         Ledsager ledsager1 = Controller.opretLedsager("Mette");
         ArrayList<HotelTilæg> hotelTilægListe = new ArrayList<>();
         hotelTilægListe.add(tilægWifiHvid);
-        Tilmelding tilmeldingBjarne = Controller.opretTilmelding(hotelHvidSvane, hotelTilægListe, valgteUdfugter, true, LocalDate.of(2024, 12, 25), LocalDate.of(2024, 12, 26), deltager3, konference1, ledsager1, null);
+        Tilmelding tilmeldingBjarne = Controller.opretTilmelding(hotelHvidSvane, true, LocalDate.of(2024, 12, 25), LocalDate.of(2024, 12, 26), deltager3, konference1, ledsager1, null);
 
         tilmeldingBjarne.beregnKonferencePris();
         tilmeldingBjarne.beregnHotelPris();

@@ -243,23 +243,22 @@ public class TilmeldingPane extends GridPane {
         }
 
         // Hent de valgte udflugter
-        ArrayList<Udflugt> valgteUdflugter = new ArrayList<>(this.udflugtListView.getSelectionModel().getSelectedItems());
+        //ArrayList<Udflugt> valgteUdflugter = new ArrayList<>(this.udflugtListView.getSelectionModel().getSelectedItems());
 
         // Hent det valgte hotel
         Hotel valgtHotel = this.hotelListView.getSelectionModel().getSelectedItem();
-        if (valgtHotel == null) {
-            showAlert("Fejl", "Vælg venligst et hotel.");
-            return;
-        }
+//        if (valgtHotel == null) {
+//            showAlert("Fejl", "Vælg venligst et hotel.");
+//            return;
+//        }
 
         // Hent de valgte hoteltilæg
-        ObservableList<HotelTilæg> valgteHotelTilægs = this.hotelTilægListView.getSelectionModel().getSelectedItems();
+        //ObservableList<HotelTilæg> valgteHotelTilægs = this.hotelTilægListView.getSelectionModel().getSelectedItems();
 
         // Opret Tilmelding via Controller
         Tilmelding tilmelding = Controller.opretTilmelding(
                 valgtHotel,
-                (ArrayList<HotelTilæg>) valgteHotelTilægs,
-                valgteUdflugter,
+            //    (ArrayList<HotelTilæg>) valgteHotelTilægs,
                 erForedragsholder,
                 ankomstDato,
                 afrejseDato,

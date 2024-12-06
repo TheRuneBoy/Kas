@@ -26,9 +26,9 @@ public class Controller {
     }
 
 
-    public static Tilmelding opretTilmelding(Hotel valgtHotel, ArrayList<HotelTilæg> valgteHotelTilæg, ArrayList<Udflugt> valgteUdflugter, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
+    public static Tilmelding opretTilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
         // Opretter Tilmelding med valgte udflugter
-        Tilmelding tilmelding = konference.createTilmelding(valgtHotel, valgteUdflugter, foredragsHolder, ankomstDato, afrejseDato, deltager, konference, ledsager, firma);
+        Tilmelding tilmelding = konference.createTilmelding(valgtHotel, foredragsHolder, ankomstDato, afrejseDato, deltager, konference, ledsager, firma);
         Storage.storeTilmelding(tilmelding);
         return tilmelding;
     }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="openjfx.javafx.controls">
+    <archive path="C:/Users/Rune H. Jensen/.m2/repository/org/openjfx/javafx-controls/22/javafx-controls-22.jar" />
+    <archive path="C:/Users/Rune H. Jensen/.m2/repository/org/openjfx/javafx-controls/22/javafx-controls-22-win.jar" />
+    <archive path="C:/Users/Rune H. Jensen/.m2/repository/org/openjfx/javafx-graphics/22/javafx-graphics-22.jar" />
+    <archive path="C:/Users/Rune H. Jensen/.m2/repository/org/openjfx/javafx-graphics/22/javafx-graphics-22-win.jar" />
+    <archive path="C:/Users/Rune H. Jensen/.m2/repository/org/openjfx/javafx-base/22/javafx-base-22.jar" />
+    <archive path="C:/Users/Rune H. Jensen/.m2/repository/org/openjfx/javafx-base/22/javafx-base-22-win.jar" />
+  </library>
+</eclipse-userlibraries>
+

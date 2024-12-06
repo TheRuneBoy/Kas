@@ -88,8 +88,8 @@ public class Konference {
     }
 
 
-    public Tilmelding createTilmelding(Hotel valgtHotel, ArrayList<Udflugt> valgteUdflugter, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
-        Tilmelding tilmelding = new Tilmelding(valgtHotel, valgteUdflugter, foredragsHolder, ankomstDato, afrejseDato, deltager, this, ledsager, firma);
+    public Tilmelding createTilmelding(Hotel valgtHotel, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
+        Tilmelding tilmelding = new Tilmelding(valgtHotel, foredragsHolder, ankomstDato, afrejseDato, deltager, this, ledsager, firma);
         tilmeldinger.add(tilmelding);
         return tilmelding;
 
