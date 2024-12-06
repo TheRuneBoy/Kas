@@ -49,11 +49,4 @@ public class Deltager {
         return mobil;
     }
 
-    public boolean isHasLedsager() {
-        return hasLedsager;
-    }
-
-    public boolean isForedragsholder() {
-        return isForedragsholder;
-    }
 }

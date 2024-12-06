@@ -15,9 +15,6 @@ public class HotelTilæg {
                 " pris = " + pris;
     }
 
-    public String getNavn() {
-        return navn;
-    }
 
     public int getPris() {
         return pris;

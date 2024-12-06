@@ -12,9 +12,6 @@ public class Storage {
     // Deltager
     private static ObservableList<Deltager> deltagerer = FXCollections.observableArrayList();
 
-    public static ObservableList<Deltager> getDeltagerer() {
-        return deltagerer;
-    }
 
     public static void storeDeltager(Deltager deltager) {
         deltagerer.add(deltager);
@@ -55,7 +52,7 @@ public class Storage {
     }
 
     //Tilmelding
-    private static ArrayList<Tilmelding> tilmeldinger = new ArrayList<>();
+    public static ArrayList<Tilmelding> tilmeldinger = new ArrayList<>();
 
     public static ArrayList<Tilmelding> getTilmeldinger() {
         return new ArrayList<>(tilmeldinger);
@@ -97,9 +94,7 @@ public class Storage {
 
     private static ArrayList<Firma> firmaer = new ArrayList<>();
 
-    public static ArrayList<Firma> getFirmaer(){
-        return new ArrayList<>(firmaer);
-    }
+
     public static void storeFirma(Firma firma){
         firmaer.add(firma);
     }

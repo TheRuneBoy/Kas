@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class KonferencePane extends GridPane {
 
     private final ListView<String> deltagerListView;
@@ -71,6 +72,7 @@ public class KonferencePane extends GridPane {
         this.add(this.deltagerListView, 8, 1, 2, 4);
         this.deltagerListView.setPrefWidth(250.0);
         this.deltagerListView.setPrefHeight(100.0);
+
 
         //Label and textField for "Navn"
         Label lblNavn = new Label("Navn");
@@ -177,12 +179,7 @@ public class KonferencePane extends GridPane {
             konferenceInfo.getItems().setAll(konferenceAttributter);
 
             // Hent tilmeldinger for den valgte konference
-            List<Tilmelding> tilmeldingerForKonference = new ArrayList<>();
-            for (Tilmelding tilmelding : Storage.getTilmeldinger()) {
-                if (tilmelding.getKonference().equals(newKonference)) {
-                    tilmeldingerForKonference.add(tilmelding);
-                }
-            }
+            List<Tilmelding> tilmeldingerForKonference = newKonference.getTilmeldinger();
 
             // Opret en liste til at vise deltagere og ledsagere
             List<String> deltagereOgLedsagere = new ArrayList<>();
@@ -191,18 +188,21 @@ public class KonferencePane extends GridPane {
                 // Add the participant's name
                 String deltagerInfo = deltager.getNavn();
 
-                // If there is a companion, add the companion's name
+                // Hvis der er en ledsager, tilføj til deltager
                 if (tilmelding.getLedsager() != null) {
                     deltagerInfo += " (Ledsager: " + tilmelding.getLedsager().getNavn() + ")";
                 }
 
-                // Add the participant and companion info to the list
+                // Tilføj deltager og ledsager til listen
                 deltagereOgLedsagere.add(deltagerInfo);
             }
 
-            // Update the ListView with participants and companions
+            // Opdater list view med deltagere og ledsagere
             deltagerListView.getItems().setAll(deltagereOgLedsagere);
+
         }
     }
+
+
 }
 

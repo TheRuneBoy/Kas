@@ -37,11 +37,6 @@ public class Hotel {
         }
     }
 
-    public void removeHotelTilæg(HotelTilæg hotelTilæg) {
-        if (hotelTilægs.contains(hotelTilæg)) {
-            hotelTilægs.remove(hotelTilæg);
-        }
-    }
 
     public ArrayList<HotelTilæg> getHotelTilægs() {
         return hotelTilægs;

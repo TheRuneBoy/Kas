@@ -53,11 +53,6 @@ public class Tilmelding {
         return ledsager;
     }
 
-    public void addhotelTilæg(HotelTilæg hotelTilæg) {
-        if (!hotelTilkøbs.contains(hotelTilæg)) {
-            hotelTilkøbs.add(hotelTilæg);
-        }
-    }
 
     public Hotel getValgtHotel() {
         return this.valgtHotel;
@@ -77,11 +72,6 @@ public class Tilmelding {
         return konference;
     }
 
-    public void addUdflugt(Udflugt udflugt) {
-        if (udflugt != null && !valgteUdflugter.contains(udflugt)) {
-            valgteUdflugter.add(udflugt);
-        }
-    }
 
     public ArrayList<Udflugt> getValgteUdflugter() {
         return valgteUdflugter;

@@ -9,12 +9,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import models.*;
 import storage.Storage;
-import models.Konference;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 
 public class TilmeldingPane extends GridPane {
@@ -29,7 +27,6 @@ public class TilmeldingPane extends GridPane {
     private ListView<Konference> konferenceListView;
     private ListView<Deltager> deltagerListView;
     private TextField deltagerTextField;
-    private TextField konferenceTextField;
     private TextField ledsagerTextField;
     private ListView<String> detailsListView;
     private ListView<Hotel> hotelListView;
@@ -195,9 +192,6 @@ public class TilmeldingPane extends GridPane {
                 updateDeltagerInfo(newDeltager);
             }
         });
-
-        //Vis Hoteller når en konference vælges
-        // hotelListView.getSelectionModel().selectedItemProperty().addListener(obs, oldHotel, newHotel) -<;
     }
 
     private void createTilmelding(boolean erForedragsholder, boolean harLedsager, boolean erFirma) {
@@ -237,9 +231,6 @@ public class TilmeldingPane extends GridPane {
         if (harLedsager) {
             String ledsagerNavn = this.ledsagerTextField.getText();
             ledsager = Controller.opretLedsager(ledsagerNavn);
-
-            // Vælg udflugter for ledsageren
-            ArrayList<Udflugt> valgteUdflugterForLedsager = new ArrayList<>(this.udflugtListView.getSelectionModel().getSelectedItems());
         }
 
         // Hent de valgte ankomst og afrejse datoer
@@ -251,7 +242,7 @@ public class TilmeldingPane extends GridPane {
             return;
         }
 
-        // Hent de valgte udflugter for deltageren
+        // Hent de valgte udflugter
         ArrayList<Udflugt> valgteUdflugter = new ArrayList<>(this.udflugtListView.getSelectionModel().getSelectedItems());
 
         // Hent det valgte hotel
@@ -281,28 +272,7 @@ public class TilmeldingPane extends GridPane {
         // Opdater deltagerlisten
         updateDeltagereListView(selectedKonference);
 
-        // Beregn og opdater totalpris
-        updateTotalPris(valgtHotel, valgteHotelTilægs, valgteUdflugter);
-
         showAlert("Succes", "Tilmeldingen blev oprettet.");
-    }
-
-
-    private void updateTotalPris(Hotel valgtHotel, ObservableList<HotelTilæg> valgteHotelTilægs, ArrayList<Udflugt> valgteUdflugter) {
-        double totalPrisValue = valgtHotel.getEnkeltPris(); // Grundpris for hotel
-
-        // Læg hoteltilæg til, hvis der er valgt nogen
-        for (HotelTilæg tilæg : valgteHotelTilægs) {
-            totalPrisValue += tilæg.getPris();
-        }
-
-        // Læg udflugtspriser til, hvis der er valgt udflugter
-        for (Udflugt udflugt : valgteUdflugter) {
-            totalPrisValue += udflugt.getPris();
-        }
-
-        // Opdater totalpris feltet
-        totalPris.setText(String.format("%.2f DKK", totalPrisValue));
     }
 
 
@@ -318,10 +288,10 @@ public class TilmeldingPane extends GridPane {
                 }
             }
 
-            // Create a SortedList that sorts based on participant name (Navn)
+            // Sorter deltager listen efter navn
             SortedList<Deltager> sortedDeltagere = new SortedList<>(deltagereList, Comparator.comparing(Deltager::getNavn));
 
-            // Set the SortedList to the ListView
+            // Sæt den sorterede liste i list view
             deltagerListView.setItems(sortedDeltagere);
 
             // Opdater hotelListView med hotellerne for den valgte konference
@@ -361,7 +331,7 @@ public class TilmeldingPane extends GridPane {
         }
 
         // 3. Vælg udflugter
-        List<Udflugt> valgteUdflugter = showUdflugtSelectionDialog();
+        ArrayList<Udflugt> valgteUdflugter = showUdflugtSelectionDialog();
         if (valgteUdflugter == null || valgteUdflugter.isEmpty()) {
             showAlert("Fejl", "Vælg venligst mindst én udflugt.");
             return;
@@ -371,31 +341,22 @@ public class TilmeldingPane extends GridPane {
         updateTilmelding(valgtHotel, valgteHotelTilægs, valgteUdflugter);
     }
 
-
     private Hotel showHotelSelectionDialog() {
-        // Åben dialog for at vælge hotel
-        // (Du kan bruge en ListView, eller en anden GUI-komponent til at vise hotellerne)
         // Returner det valgte hotel
         return hotelListView.getSelectionModel().getSelectedItem();  // Eksempel på valg fra en ListView
     }
 
     private ArrayList<HotelTilæg> showHotelTilægSelectionDialog(Hotel valgtHotel) {
-        // Åben dialog for at vælge hoteltilæg baseret på det valgte hotel
         // Returner de valgte hoteltilæg
         return new ArrayList<>(hotelTilægListView.getSelectionModel().getSelectedItems());  // Eksempel
     }
 
-    private List<Udflugt> showUdflugtSelectionDialog() {
-        // Assuming udflugtListView contains the available excursions
-        // Return the selected items as a list
-        return new ArrayList<>(udflugtListView.getSelectionModel().getSelectedItems());
+    private ArrayList<Udflugt> showUdflugtSelectionDialog() {
+        // Returner de valgte udflugter
+        return new ArrayList<>(udflugtListView.getSelectionModel().getSelectedItems());  // Eksempel
     }
 
-
-    private void updateTilmelding(Hotel valgtHotel, ArrayList<HotelTilæg> valgteHotelTilægs, List<Udflugt> valgteUdflugter) {
-        // Opdater den aktuelle tilmelding med de valgte data
-        // Her kan du opdatere det relevante Tilmelding objekt og opdatere UI'en med den nye information
-        // Du kan bruge Controller til at opdatere eller oprette en ny Tilmelding
+    private void updateTilmelding(Hotel valgtHotel, ArrayList<HotelTilæg> valgteHotelTilægs, ArrayList<Udflugt> valgteUdflugter) {
     }
 
 
@@ -405,55 +366,33 @@ public class TilmeldingPane extends GridPane {
         detailsListView.getItems().add("Adresse: " + deltager.getAdresse());
         detailsListView.getItems().add("Mobil: " + deltager.getMobil());
 
-        // Find tilmeldingen for deltageren
-        Tilmelding tilmelding = findTilmeldingForDeltager(deltager, konference);
-
-        if (tilmelding != null) {
-            // Tjek om deltageren er foredragsholder og vis det
+        // Tjek om deltageren er foredragsholder
+        Tilmelding tilmelding = findTilmeldingForDeltager(deltager);
+        if (tilmelding != null && tilmelding.getDeltager().equals(deltager)) {
             detailsListView.getItems().add("Foredragsholder: " + (tilmelding.isForedragsHolder() ? "Ja" : "Nej"));
-
-            // Tilføj ankomst og afrejse dato
-            detailsListView.getItems().add("Ankomst Dato: " + tilmelding.getAnkomstDato());
-            detailsListView.getItems().add("Afrejse Dato: " + tilmelding.getAfrejseDato());
-
-            // Hvis deltageren er tilknyttet et firma, vis firmaoplysninger
-            if (tilmelding.getDeltager().getFirma() != null) {
-                detailsListView.getItems().add("Firma Navn: " + tilmelding.getDeltager().getFirma().getFirmaNavn());
-                detailsListView.getItems().add("Firma Mobil: " + tilmelding.getDeltager().getFirma().getFirmaMobil());
-            }
-
-            // Hvis deltageren har en ledsager, vis ledsagerens navn og udflugter
-            if (tilmelding.getLedsager() != null) {
-                detailsListView.getItems().add("Ledsager Navn: " + tilmelding.getLedsager().getNavn());
-
-                // Vis ledsagerens udflugter, hvis der er nogen
-                if (!tilmelding.getValgteUdflugter().isEmpty()) {
-                    detailsListView.getItems().add("Ledsagerens Udflugter: ");
-                    for (Udflugt udflugt : tilmelding.getValgteUdflugter()) {
-                        detailsListView.getItems().add(udflugt.toString()); // Udflugtens detaljer vises her
-                    }
-                } else {
-                    detailsListView.getItems().add("Ingen udflugter valgt for ledsageren.");
-                }
-            }
-
-            // Tilføj hotel til info
-            if (tilmelding.getValgtHotel() != null) {
-                detailsListView.getItems().add("Hotel: " + tilmelding.getValgtHotel().getNavn());
-            } else {
-                detailsListView.getItems().add("Hotel: Intet Hotel valgt");
-            }
         }
-    }
 
-    // Eksempel på hvordan findTilmeldingForDeltager kan implementeres
-    private Tilmelding findTilmeldingForDeltager(Deltager deltager, Konference konference) {
-        for (Tilmelding tilmelding : konference.getTilmeldinger()) {
-            if (tilmelding.getDeltager().equals(deltager)) {
-                return tilmelding;
-            }
+        // Tilføj ankomst og afrejse dato
+        detailsListView.getItems().add("Ankomst Dato: " + tilmelding.getAnkomstDato());
+        detailsListView.getItems().add("Afrejse Dato: " + tilmelding.getAfrejseDato());
+
+        // Hvis deltageren er tilknyttet et firma, vis firmaoplysninger
+        if (tilmelding.getDeltager().getFirma() != null) {
+            detailsListView.getItems().add("Firma Navn: " + tilmelding.getDeltager().getFirma().getFirmaNavn());
+            detailsListView.getItems().add("Firma Mobil: " + tilmelding.getDeltager().getFirma().getFirmaMobil());
         }
-        return null; // Hvis ingen tilmelding findes
+
+        // Hvis deltageren har en ledsager, vis ledsagerens navn
+        if (tilmelding.getLedsager() != null) {
+            detailsListView.getItems().add("Ledsager Navn: " + tilmelding.getLedsager().getNavn());
+        }
+
+        // Tilføj hotel til info
+        if (tilmelding.getValgtHotel() != null) {
+            detailsListView.getItems().add("Hotel: " + tilmelding.getValgtHotel().getNavn());
+        } else {
+            detailsListView.getItems().add("Hotel: Intet Hotel valgt");
+        }
     }
 
 
@@ -462,6 +401,16 @@ public class TilmeldingPane extends GridPane {
             ObservableList<Udflugt> udflugterList = FXCollections.observableArrayList(konference.getUdflugter());
             udflugtListView.setItems(udflugterList);
         }
+    }
+
+    // Hjælpe metode til at finde en tilmelding for en deltager
+    private Tilmelding findTilmeldingForDeltager(Deltager deltager) {
+        for (Tilmelding tilmelding : Storage.getTilmeldinger()) {
+            if (tilmelding.getDeltager().equals(deltager)) {
+                return tilmelding;
+            }
+        }
+        return null;
     }
 
 

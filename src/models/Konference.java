@@ -80,11 +80,6 @@ public class Konference {
         }
     }
 
-    public void removeUdflugt(Udflugt udflugt) {
-        if (udflugter.contains(udflugt)) {
-            udflugter.remove(udflugt);
-        }
-    }
 
     public void addHotel(Hotel hotel) {
         if (!hoteller.contains(hotel)) {
@@ -92,11 +87,6 @@ public class Konference {
         }
     }
 
-    public void removeHotel(Hotel hotel) {
-        if (hoteller.contains(hotel)) {
-            hoteller.remove(hotel);
-        }
-    }
 
     public Tilmelding createTilmelding(Hotel valgtHotel, ArrayList<Udflugt> valgteUdflugter, boolean foredragsHolder, LocalDate ankomstDato, LocalDate afrejseDato, Deltager deltager, Konference konference, Ledsager ledsager, Firma firma) {
         Tilmelding tilmelding = new Tilmelding(valgtHotel, valgteUdflugter, foredragsHolder, ankomstDato, afrejseDato, deltager, this, ledsager, firma);
@@ -105,21 +95,6 @@ public class Konference {
 
     }
 
-    public void removeTilmelding(Tilmelding tilmelding) {
-        if (tilmeldinger.contains(tilmelding)) {
-            tilmeldinger.remove(tilmelding);
-        }
-    }
-
-    public void addTilmelding(Tilmelding nyTilmelding) {
-        if (!tilmeldinger.contains(nyTilmelding)){
-            tilmeldinger.add(nyTilmelding);
-        }
-    }
-
-    public void addDeltager(Deltager deltager) {
-        this.deltagere.add(deltager);
-    }
 
     public int getMaxAntalDeltagere() {
         return this.antalDeltagere;
